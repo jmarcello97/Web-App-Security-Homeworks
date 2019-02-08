@@ -1,0 +1,8 @@
+Libraries needed:
+	requests
+	netaddr
+	sys
+
+How to install:
+	pip install requests
+	pip install netaddr

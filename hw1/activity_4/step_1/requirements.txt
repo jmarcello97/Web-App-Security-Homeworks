@@ -1,0 +1,5 @@
+Libraries required:
+	requests
+
+How to install Libraries:
+	pip install requests

@@ -1,0 +1,18 @@
+version: "3"
+services:
+  #load_balancer:
+    #build: ./act3_load_balancer
+    #ports:
+      #- "83:80"
+  secondary_webserver:
+    build: ./act3_webserver
+    ports:
+      - "82:80"
+  webserver:
+    build: ./act1
+    ports:
+      - "81:80"
+  cache:
+    build: ./act2
+    ports:
+      - "83:8080"
