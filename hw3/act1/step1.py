@@ -32,7 +32,16 @@ def main():
 		if is_course_number:
 			course+=string
 			is_course_number=False
-			print(course)
+			if course.count(",") == 2:
+				sep = course.split(",")
+				print(sep[0]+","+sep[2])
+				print(sep[0].split("-")[0]+"-"+sep[1].strip()+","+sep[2])
+			elif course.count(",") == 3:
+				sep = course.split(",")
+				print(sep[0]+","+sep[2])
+				print(sep[0].split("-")[0]+"-"+sep[1].strip()+","+sep[2].replace("I",sep[3].strip()))
+			else:
+				print(course)
 			course=""
 		if containsDigit(string) and "-" in string:
 			course+=string+","
