@@ -15,7 +15,7 @@ def main():
 
 	response = request(request_type,file_path,host,port,connection,parameters)
 
-	print(response)
+	#print(response)
 	soup = BeautifulSoup(response, 'html.parser')
 
 	#print(soup)
@@ -25,9 +25,9 @@ def main():
 	is_course_number = False
 
 	course=""
-	print(rows)
+	#print(rows)
 	for r in rows:
-		string=r.text.strip()
+		string=r.text.strip().encode('utf-8')
 		
 		if is_course_number:
 			course+=string

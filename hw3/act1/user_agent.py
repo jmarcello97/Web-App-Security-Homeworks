@@ -27,7 +27,7 @@ def request(request_type, file_path, host, port, connection, parameters):
 	if parameters != None:
 		post_request += parameters
 
-	print(post_request)
+	#print(post_request)
 	s.send(post_request)
 
 	response=""
