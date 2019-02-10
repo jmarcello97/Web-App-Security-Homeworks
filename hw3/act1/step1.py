@@ -49,5 +49,6 @@ def main():
 
 		#print(r.text)
 
-main()
+if __name__=="__main__":
+	main()
 	
