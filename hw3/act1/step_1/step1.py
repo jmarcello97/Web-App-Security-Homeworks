@@ -1,4 +1,3 @@
-
 from user_agent import *
 from bs4 import BeautifulSoup
 

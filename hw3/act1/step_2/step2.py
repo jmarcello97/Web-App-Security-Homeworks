@@ -1,33 +1,28 @@
-
 from user_agent import *
 from bs4 import BeautifulSoup
 import os
+from multiprocessing import Pool
 
-def download_image(lst):
+def download_image(pic):
 	request_type = "GET"
 	host = "www.rit.edu"
 	port = 443
 	connection = "keep-alive"
 	parameters = None
 
-	os.mkdir("./Pictures")
-
-	#file_path = 
+	file_path = "https://www.rit.edu{}".format(pic).replace(" ", "%20")
+	response = request(request_type,file_path,host,port,connection,parameters)
+	response = response.split("\r\n\r\n")[1]
+	name=pic.split('/')
+	name=name[len(name)-1]
 	
-	for pic in lst:
-		file_path = "https://www.rit.edu{}".format(pic).replace(" ", "%20")
-		response = request(request_type,file_path,host,port,connection,parameters)
-		response = response.split("\r\n\r\n")[1]
-		name=pic.split('/')
-		name=name[len(name)-1]
-	
-		file = "./Pictures/{}".format(name)
-		with open(file, 'wb') as f:
-			f.write(response)
-		f.close()
+	file = "./Pictures/{}".format(name)
+	with open(file, 'wb') as f:
+		f.write(response)
+	f.close()
 
-		#print(response)
-		#print(name)
+	#print(response)
+	#print(name)
 
 def main():
 	lst=[]
@@ -40,8 +35,6 @@ def main():
 
         response = request(request_type,file_path,host,port,connection,parameters)
 
-	#print(response)
-
 	soup = BeautifulSoup(response, 'html.parser')
 
         #print(soup)
@@ -53,7 +46,12 @@ def main():
 	for r in rows:
 		pic = r.find_all("img")[0]["src"]
 		lst.append(pic)
-		print(pic)
+		#print(pic)
 
-	download_image(lst)
+	if not os.path.exists("./Pictures"):
+		os.mkdir("./Pictures")
+
+	p = Pool(processes=30)
+	p.map(download_image, lst)
+ 
 main()
