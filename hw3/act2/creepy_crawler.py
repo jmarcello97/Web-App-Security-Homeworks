@@ -4,11 +4,12 @@ from multiprocessing import Lock,Process,Pool,Manager
 import os
 from urlparse import urlparse
 
-DEPTH=2
+DEPTH=4
 #host="www.rit.edu"
 manager=Manager()
 total_emails=manager.list()
 total=[]
+#visited=[]
 visited=manager.list()
 errors=[]
 failed=[]
@@ -34,8 +35,8 @@ def make_link(link,parent,depth):
 	return new_link
 
 def print_link_attributes(link):
-	print("Link: {}".format(link.link.encode))
-	print("Parent: {}".format(link.parent))
+	print("Link: {}".format(link.link.encode('utf-8')))
+	print("Parent: {}".format(link.parent.encode('utf-8')))
 	print("Depth: {}".format(link.depth))
 	
 def creepy_crawl(parent):
@@ -45,7 +46,7 @@ def creepy_crawl(parent):
 	if  parent.depth > DEPTH:
 		return 0
 
-				 
+
 	if parent.depth <= DEPTH and len(parent.link) > 1:
 		#lock.acquire()
 
@@ -75,9 +76,20 @@ def creepy_crawl(parent):
 
 			port=80
 
-		if (host+path) not in visited and "rit.edu" in host and "pdf" not in path and "png" not in path and "jpg" not in path:
+		if (host+path+str(parent.depth)) not in visited and "rit.edu" in host and "pdf" not in path and "png" not in path and "jpg" not in path:
 			response=request("GET",path,host,port,"close",None)
-			visited.append(host+path)
+		
+			visited.append(host+path+str(parent.depth))
+
+			if response == 1 and len(path) > 1:
+				#print(path)
+				if path[-1] == "/":
+ 					path=path[:-1]
+ 				else:
+ 					path+="/"
+ 				response=request("GET",path,host,port,"close",None)
+
+				visited.append(host+path+str(parent.depth))
 
 			if response != 1:
 				print('VISITED=>{} {}'.format(host+path,parent.depth))
@@ -99,21 +111,17 @@ def creepy_crawl(parent):
 				
 				emails=soup.select("a[href^=mailto]")
 		
-				lock.acquire()
+				#lock.acquire()
 				#print("Here 1")	
 				for email in emails:
-					write_to_file=email['href'].split("mailto:")[1].strip()
-					if email['href'] not in total_emails and "@" in email['href'] and write_to_file != '<a href="':
-						#e=email.text
-						#files[parent.depth-1].write(e)
-						#files[parent.depth-1].open(
-						#print("HERE 2")
-						#files[parent.depth-1].write(email['href'].split("mailto:")[1].encode('utf-8')+"\n")
+					write_to_file=email['href'].split("mailto:")[1].encode('utf-8').strip()
+					write_to_file=write_to_file.split("?")[0]
+					if write_to_file not in total_emails and "@" in write_to_file and write_to_file != '<a href="':
 						files[parent.depth-1].write(write_to_file + "\n")
 						files[parent.depth-1].flush()
 						#print("HERE 3")
-						total_emails.append(email['href'])
-						print("EMAIL=>{} {}".format(email['href'].encode('utf-8'),parent.depth))
+						total_emails.append(write_to_file)
+						print("EMAIL=>{} {}".format(write_to_file,parent.depth))
 	
 				#visited.append(host+path)
 
@@ -121,12 +129,11 @@ def creepy_crawl(parent):
 				#emails=[email["href"] for email in soup.select("a[href^=malito:]")]
 				#all_emails+=emails
 				
-				lock.release()
+				#lock.release()
 				#print("HERE 4")
 				if parent.depth != DEPTH:
 					for l in soup.find_all('a', href=True):
 						if "mailto" not in l['href']:
-							#print("HERE 5")
 							link=make_link(l['href'],path,parent.depth+1)
 							total.append(link)
 							creepy_crawl(link)
@@ -170,7 +177,7 @@ def main():
 	response = request(request_type,file_path,host,port,connection,parameters)
 	soup=BeautifulSoup(response, 'html.parser')
 
-	visited.append("www.rit.edu/")
+	visited.append("www.rit.edu/1")
 
         stack=[]
 	for l in soup.find_all('a', href=True):
@@ -184,13 +191,16 @@ def main():
 
 
 	for email in emails:
-		if email['href'] not in total_emails and "@" in email['href']:
-			files[0].write(email['href'].split("mailto:")[1].encode('utf-8')+"\n")
-			total_emails.append(email['href'])
-			print("EMAIL=>{} {}".format(email['href']),1)
+		write_to_file=email['href'].split("mailto:")[1].encode('utf-8').strip()
+		write_to_file=write_to_file.split("?")[0]
+
+		if write_to_file not in total_emails and "@" in write_to_file:
+			files[0].write(write_to_file+"\n")
+			total_emails.append(write_to_file)
+			print("EMAIL=>{} {}".format(write_to_file,1))
 
 	
-	p = Pool(processes=10)
+	p = Pool(processes=20)
         p.map(creepy_crawl, stack)
 	p.close()
 	p.join()	
@@ -198,6 +208,6 @@ def main():
 		f.close()
 
 
-	#print(total_emails)
+	print(len(total_emails))
 
 main()
