@@ -1,8 +1,23 @@
 from bs4 import BeautifulSoup
 from user_agent import *
-from multiprocessing import Lock,Process,Pool
+from multiprocessing import Lock,Process,Pool,Manager
+import os
+from urlparse import urlparse
 
-DEPTH=4
+DEPTH=2
+#host="www.rit.edu"
+manager=Manager()
+total_emails=manager.list()
+total=[]
+visited=manager.list()
+errors=[]
+failed=[]
+
+lock = Lock()
+files=[]
+for i in range(1, DEPTH+1):
+	files.append(open("depth{}_emails.txt".format(i), "w+"))
+
 
 class Link(object):
 	link=""
@@ -10,8 +25,8 @@ class Link(object):
 	depth=0
 
 	def __init__(self,link,parent,depth):
-		self.link=link
-		self.parent=parent
+		self.link=link.encode('utf-8')
+		self.parent=parent.encode('utf-8')
 		self.depth=depth
 
 def make_link(link,parent,depth):
@@ -19,139 +34,170 @@ def make_link(link,parent,depth):
 	return new_link
 
 def print_link_attributes(link):
-	print("Link: {}".format(link.link.encode('utf-8')))
-	print("Parent: {}".format(link.parent.encode('utf-8')))
+	print("Link: {}".format(link.link.encode))
+	print("Parent: {}".format(link.parent))
 	print("Depth: {}".format(link.depth))
 	
-def creepy_crawl(host):
+def creepy_crawl(parent):
+
+	host="www.rit.edu"
+	#print(stack)
+	if  parent.depth > DEPTH:
+		return 0
+
+				 
+	if parent.depth <= DEPTH and len(parent.link) > 1:
+		#lock.acquire()
+
+		#print(parent.link)
+		if "http" not in parent.link and "https" not in parent.link:
+			if parent.link[0] != "/" and parent.parent[-1] != "/":
+				path=(parent.parent+"/"+parent.link)
+			elif parent.link[0] == "/" and parent.parent[-1] == "/":
+				parent.link=parent.link.split("/")[1]
+				path=parent.parent+parent.link
+			else:
+				path=(parent.parent+parent.link)
+			port=443
+		elif "https" in parent.link:
+
+			data=urlparse(parent.link)
+			host=data.netloc
+			path=data.path
+
+			port=443
+		else:
+
+			data=urlparse(parent.link)
+
+			host=data.netloc
+			path=data.path
+
+			port=80
+
+		if (host+path) not in visited and "rit.edu" in host and "pdf" not in path and "png" not in path and "jpg" not in path:
+			response=request("GET",path,host,port,"close",None)
+			visited.append(host+path)
+
+			if response != 1:
+				print('VISITED=>{} {}'.format(host+path,parent.depth))
+				r=response.split("\r\n\r\n")
+				#if "200" not in (r[0]):
+				#	visited.append(host+path)
+				#	#failed.append(parent)
+				#	if path[-1] == "/":
+				#		path=path[:-1]
+				#	else:
+				#		path+="/"
+				#	response=request(request_type,path,host,port,connection,parameters)
+				#	r=response.split("\r\n\r\n")
+				#	if "200" not in r[0]:
+				#		failed.append(parent)
+
+				soup=BeautifulSoup(response, 'html.parser', from_encoding="iso-8859-1")
+
+				
+				emails=soup.select("a[href^=mailto]")
+		
+				lock.acquire()
+				#print("Here 1")	
+				for email in emails:
+					write_to_file=email['href'].split("mailto:")[1].strip()
+					if email['href'] not in total_emails and "@" in email['href'] and write_to_file != '<a href="':
+						#e=email.text
+						#files[parent.depth-1].write(e)
+						#files[parent.depth-1].open(
+						#print("HERE 2")
+						#files[parent.depth-1].write(email['href'].split("mailto:")[1].encode('utf-8')+"\n")
+						files[parent.depth-1].write(write_to_file + "\n")
+						files[parent.depth-1].flush()
+						#print("HERE 3")
+						total_emails.append(email['href'])
+						print("EMAIL=>{} {}".format(email['href'].encode('utf-8'),parent.depth))
+	
+				#visited.append(host+path)
+
+
+				#emails=[email["href"] for email in soup.select("a[href^=malito:]")]
+				#all_emails+=emails
+				
+				lock.release()
+				#print("HERE 4")
+				if parent.depth != DEPTH:
+					for l in soup.find_all('a', href=True):
+						if "mailto" not in l['href']:
+							#print("HERE 5")
+							link=make_link(l['href'],path,parent.depth+1)
+							total.append(link)
+							creepy_crawl(link)
+				#exit(0)
+				#lock.release()
+			else:
+				errors.append(parent)
+
+
+
+	#creepy_crawl(stack)
+	#for link in total:
+	#	print_link_attributes(link)
+	#	print("\n")
+	#print(len(total))
+
+	#print("ERRORS #############################################")
+	#for e in errors:
+	#	print(e)
+
+	#for email in total_emails:
+	#	print(email)
+
+	#print("VISITED #####################################")
+	#for l in visited:
+	#	print(l)
+
+	#print("FAILED ###################")
+	#for f in failed:
+	#	print_link_attributes(f)
+
+def main():
+
 	request_type="GET"
-	file_path="https://www.rit.edu"
+	file_path="/"
 	port=443
-	#file_path="http://10.0.0.51"
-	#port=80
 	connection="close"
 	parameters=None
-
+	host="www.rit.edu"
+	
 	response = request(request_type,file_path,host,port,connection,parameters)
-	print(response)
 	soup=BeautifulSoup(response, 'html.parser')
 
-	count=0
+	visited.append("www.rit.edu/")
 
-	stack=[]
-	total=[]
+        stack=[]
 	for l in soup.find_all('a', href=True):
-		count+=1
-		link=make_link(l['href'],file_path,1)
+		link=make_link(l['href'],"/",1)
 		stack.append(link)
 		total.append(link)
 		#print(link['href'])
 
-	print(count)
+	print(len(stack))
+	emails=soup.select("a[href^=mailto]")
 
-	total_emails=[]
 
+	for email in emails:
+		if email['href'] not in total_emails and "@" in email['href']:
+			files[0].write(email['href'].split("mailto:")[1].encode('utf-8')+"\n")
+			total_emails.append(email['href'])
+			print("EMAIL=>{} {}".format(email['href']),1)
 
-	visited=[]
-	errors=[]
-
-	while(len(stack) != 0):
-		print(stack)
-		parent=stack.pop(0)
-
-		#if prev[1] > parent[1]:
-		#	lst=prev[0].split("/")
-		#	for i in range(parent[1]-1):
-				 
-		#print(parent)
-		print(parent.link)
-		print(parent.depth)
-		if parent.depth != DEPTH and len(parent.link) > 1:
-			if "rit.edu" in parent.link or "http" not in parent.link or "https" not in parent.link:
-				#lock.acquire()
-
-				print(parent.link)
-				if "http" not in parent.link and "https" not in parent.link:
-					if parent.link[0] != "/" and parent.parent[-1] != "/":
-						path=(parent.parent+"/"+parent.link)
-					else:
-						path=(parent.parent+parent.link)
-					if parent.link[-1] != "/":
-						path+="/"
-					#port=443
-				elif "https" in parent.link:
-					path=parent.link
-					port=443
-				else:
-					path=parent.link
-					port=80
-
-				#print(path)
-				if path not in visited:
-					#lock.acquire()
-					response=request(request_type,path,host,port,connection,parameters)
-					print(response)
-					soup=BeautifulSoup(response, 'html.parser')
-
-					emails=soup.select("a[href^=mailto]")
-			
-					#lock.acquire()
-					for email in emails:
-						if email['href'] not in total_emails:
-							total_emails.append(email['href'])
 	
-					visited.append(path)
+	p = Pool(processes=10)
+        p.map(creepy_crawl, stack)
+	p.close()
+	p.join()	
+	for f in files:
+		f.close()
 
 
-					#emails=[email["href"] for email in soup.select("a[href^=malito:]")]
-					#all_emails+=emails
-					#print(total_emails)
-					#print(len(total_emails))
-					#print(parent)
-					print(response)
-				
-					#exit(0)
-					#lock.release()
-					for l in soup.find_all('a', href=True):
-						print(l['href'])
-						link=make_link(l['href'],path,parent.depth+1)
-						stack.insert(0,link)
-						total.append(link)
-					#print(total)
-					#exit(0)
-					#lock.release()
-
-			else:
-				errors.append(parent.link)
-		
-
-	for link in total:
-		print_link_attributes(link)
-		print("\n")
-	print(len(total))
-
-	for e in errors:
-		print(e)
-
-	for email in total_emails:
-		print(email)
-
-def main():
-	#host="www.rit.edu"
-	#request_type="GET"
-	#file_path="https://www.rit.edu/overview/finest-facilities"
-	#port=443
-	#connection="close"
-	#parameters=None
-
-        #response = request(request_type,file_path,host,port,connection,parameters)
-	#print(response)
-	lock = Lock()
-	#for i in range(5):
-	#	p = Process(target=creepy_crawl, args=("10.0.0.51",lock))
-	#	p.start()
-
-	creepy_crawl("www.rit.edu")#,lock)
-
+	#print(total_emails)
 
 main()
