@@ -52,13 +52,19 @@ def creepy_crawl(parent):
 
 		#print(parent.link)
 		if "http" not in parent.link and "https" not in parent.link:
-			if parent.link[0] != "/" and parent.parent[-1] != "/":
-				path=(parent.parent+"/"+parent.link)
-			elif parent.link[0] == "/" and parent.parent[-1] == "/":
-				parent.link=parent.link.split("/")[1]
-				path=parent.parent+parent.link
-			else:
-				path=(parent.parent+parent.link)
+			try:
+				if parent.link[0] != "/" and parent.parent[-1] != "/":
+					path=(parent.parent+"/"+parent.link)
+		
+				elif parent.link[0] == "/" and parent.parent[-1] == "/":
+					parent.link=parent.link.split("/")[1]
+					path=parent.parent+parent.link
+				
+				else:
+					path=(parent.parent+parent.link)
+
+			except:
+				return None
 			port=443
 		elif "https" in parent.link:
 
@@ -83,10 +89,14 @@ def creepy_crawl(parent):
 
 			if response == 1 and len(path) > 1:
 				#print(path)
-				if path[-1] == "/":
- 					path=path[:-1]
- 				else:
- 					path+="/"
+				try:
+					if path[-1] == "/":
+ 						path=path[:-1]
+ 					else:
+ 						path+="/"
+				except:
+					return None
+
  				response=request("GET",path,host,port,"close",None)
 
 				visited.append(host+path+str(parent.depth))
@@ -114,14 +124,18 @@ def creepy_crawl(parent):
 				#lock.acquire()
 				#print("Here 1")	
 				for email in emails:
-					write_to_file=email['href'].split("mailto:")[1].encode('utf-8').strip()
-					write_to_file=write_to_file.split("?")[0]
-					if write_to_file not in total_emails and "@" in write_to_file and write_to_file != '<a href="':
-						files[parent.depth-1].write(write_to_file + "\n")
-						files[parent.depth-1].flush()
-						#print("HERE 3")
-						total_emails.append(write_to_file)
-						print("EMAIL=>{} {}".format(write_to_file,parent.depth))
+					try:
+						write_to_file=email['href'].split("mailto:")[1].encode('utf-8').strip()
+						write_to_file=write_to_file.split("?")[0]
+						if write_to_file not in total_emails and "@" in write_to_file and write_to_file != '<a href="':
+							files[parent.depth-1].write(write_to_file + "\n")
+							files[parent.depth-1].flush()
+							#print("HERE 3")
+							total_emails.append(write_to_file)
+							print("EMAIL=>{} {}".format(write_to_file,parent.depth))
+
+					except:
+						continue
 	
 				#visited.append(host+path)
 
