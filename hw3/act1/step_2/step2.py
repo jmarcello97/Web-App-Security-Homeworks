@@ -45,6 +45,7 @@ def main():
 	
 	for r in rows:
 		pic = r.find_all("img")[0]["src"]
+		print(pic)
 		lst.append(pic)
 		#print(pic)
 
