@@ -1,0 +1,2 @@
+129.21.183.63 - - [02/Mar/2019:21:39:31 +0000] "GET / HTTP/1.1" 200 3477 "-" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/53 (KHTML, like Gecko) Chaim/15.0.87"
+129.21.183.63 - - [02/Mar/2019:21:39:31 +0000] "GET /icons/ubuntu-logo.png HTTP/1.1" 200 3623 "http://18.223.121.225/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/53 (KHTML, like Gecko) Chaim/15.0.87"
