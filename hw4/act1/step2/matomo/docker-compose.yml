@@ -1,0 +1,27 @@
+version: "3"
+
+services:
+  webserver:
+    build: .
+    ports:
+      - "80:80"
+  app:
+    image: matomo:3.5-apache
+    links:
+      - db
+    volumes:
+      - "./config:/var/www/html/config:rw"
+      - "./logs:/var/www/html/logs"
+    ports:
+      - "8080:80"
+
+  db:
+    image: mariadb:latest
+    volumes:
+      - "./mysql/runtime2:/var/lib/mysql"
+    environment:
+      - "MYSQL_DATABASE=db"
+      - "MYSQL_ROOT_PASSWORD=CHANGE_ME"
+      - "MYSQL_USER=app"
+      - "MYSQL_PASSWORD=CHANGE_ME"
+  
