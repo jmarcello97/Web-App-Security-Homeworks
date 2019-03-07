@@ -4,6 +4,14 @@ session_start();
 $has_session = session_status() == PHP_SESSION_ACTIVE;
 if($has_session){
 	$destroy = false;
+
+	# NEW CODE
+  	if (!(hash_equals($_SESSION['token'], $_GET['token']))) {
+ 		#$destroy=true;
+ 		die("TOKEN DOESN'T MATCH");
+ 	}       
+ 	# END OF NEW CODE
+
 	if (!isset($_SESSION['login']) or !isset($_SESSION['user_id'])){
 		session_regenerate_id(true);
 		session_destroy();

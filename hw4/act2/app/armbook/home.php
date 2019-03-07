@@ -3,7 +3,16 @@ include_once("common.php");
 session_start();
 $has_session = session_status() == PHP_SESSION_ACTIVE;
 if($has_session){
+
 	$destroy = false;
+
+	# NEW CODE, create token
+	if (empty($_SESSION['token'])) {
+		$_SESSION['token']=bin2hex(random_bytes(32));
+	}
+	$token=$_SESSION['token'];
+	# END OF NEW CODE
+
 	if (!isset($_SESSION['login']) or !isset($_SESSION['user_id'])){
 		session_regenerate_id(true);
 		session_destroy();
@@ -157,16 +166,21 @@ if($has_session){
 			});
 		});
 		$( "#add_friend" ).click(function() {
-			$.get( "add_friend.php?id=<?php echo $id_to_get; ?>", function( data ) {
+
+			// NEW CODE, added token parameter
+			$.get( "add_friend.php?id=<?php echo $id_to_get; ?>&token=<?php echo $token; ?>", function( data ) {
 			  event.preventDefault();
 			});
 			location.reload();
+			// END OF NEW CODE
 		});
 		$( "#del_friend" ).click(function() {
-			$.get( "del_friend.php?id=<?php echo $id_to_get; ?>", function( data ) {	
+			// NEW CODE, added token parameter
+			$.get( "del_friend.php?id=<?php echo $id_to_get; ?>&token=<?php echo $token; ?>", function( data ) {	
 			  event.preventDefault();
 			});
 			location.reload();
+			// END OF NEW CODE
 		});		
 	});
 	</script>
