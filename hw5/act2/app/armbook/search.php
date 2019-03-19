@@ -66,7 +66,7 @@ if($has_session){
 }
 ?>
 	<link rel="stylesheet" type="text/css" href="background2.css" />
-	<link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
+	<link href='//fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
 	<script type="text/javascript" src="js/jquery.mousewheel-3.0.6.pack.js"></script>
 	<!-- Add fancyBox -->
