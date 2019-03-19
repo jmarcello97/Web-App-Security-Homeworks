@@ -1,0 +1,289 @@
+body
+{
+    font-family: 'Open Sans', sans-serif;
+    background: #e9ebee;
+}
+div {
+    display: block;
+}
+#botcont {
+	min-height: 100px;
+	width: 100%;
+}
+
+#profpic{
+	position:relative;
+	height: 0px;
+}
+#name {
+	text-shadow: 0 0 3px rgba(0, 0, 0, .4);
+	font-size: 24px;
+	font-weight: bold;
+	letter-spacing: 0;
+	color: #fff;
+	padding-left: 275px;
+}
+
+#edit{
+	width: 20px;
+	height: 20px;
+	position:relative;
+	left: -45px;
+	top: 35px;
+    z-index: 10;
+    cursor: pointer;
+}
+
+.friend{
+	float: right;
+	background-clip: padding-box;
+	border-color: rgba(0, 0, 0, .4);
+	line-height: 26px;
+	padding: 0 10px;
+	background-color: #f6f7f9;
+        border-color: #ced0d4;
+        color: #4b4f56;
+	border: 1px solid;
+        border-radius: 2px;
+        box-sizing: content-box;
+	font-family: helvetica, arial, sans-serif;
+	font-size: 12px;
+	-webkit-font-smoothing: antialiased;
+    font-weight: bold;
+    padding: 0 8px;
+    position: relative;
+    text-align: center;
+    text-shadow: none;
+    vertical-align: middle;
+    cursor: pointer;
+}
+
+#bluebar {
+    min-width: 100%;
+    width: 100%;
+    background-color: #3b5998;
+    border-bottom: 1px solid #29487d;
+    color: #fff;
+    position: relative;
+
+    top: -10px;
+    left: -5px;
+    height: 43px;
+
+}
+#info{
+	width: 95%;
+	position: absolute;
+	top: 200px;
+	
+}
+#nav {
+    width: 100%;
+    z-index: 4; 
+	min-height: 30px;
+	background-color: #fff;
+	height: 50px;
+
+}
+
+.links{
+    border-right: 1px solid #e9eaed;
+    float: left;
+    font-size: 14px;
+    font-weight: bold;
+    height: 43px;
+    line-height: 3.05;
+    padding: 0 17px;
+    position: relative;
+    vertical-align: middle;
+    white-space: nowrap;
+    color: #365899;
+    cursor: pointer;
+    text-decoration: none;
+	background-color: #fff;
+}
+
+#navcont {
+    border: 0;
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+    clear: right;
+    padding-left: 201px;
+    width: 649px;
+}
+
+#updateStat {
+    background-color: #fff;
+	margin-bottom: 25px;
+	padding-bottom: 100px;	
+}
+
+#posts {
+	background-color: #fff;
+}
+
+#global {
+    margin: 0 auto;
+    position: relative;
+    zoom: 1;
+    width: 981px;
+    top: -10px;
+}
+
+#padding {
+	list-style: none;
+    margin: 0;
+    padding: 10px 0;
+    position: relative; 
+}
+
+#logo {
+	position: relative;
+	float: left;
+}
+#logo_img {
+	
+	height: 40px;
+}
+
+#search_div{
+	position: relative;
+	left: 20%;
+	top: 7px;
+}
+#search {
+	height: 30px;
+	width: 400px;
+}
+
+#logout_div{
+	position: relative;
+	float: right;
+	left: -10px;
+	top: -35px;
+}
+
+#logout {
+	color: white;
+}
+
+#right {
+    float: right;
+    margin-left: 15px;
+    width: 512px;
+	box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+	padding: 10px 0;
+	background-color: #fff;
+}
+
+#left {
+	
+	background-color: #fff;
+	box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    width: 423px;
+    float: left;
+    margin-left: 0;
+	padding: 10px 0;
+}
+
+#outer {
+    min-height: 36px;
+    padding-top: 23px;
+}
+
+#statpic {
+    float: left;
+    min-height: 1px;
+	
+}
+
+.statBox {
+	float: right;
+    -webkit-appearance: none;
+    background-color: transparent;
+    border: 0;
+    border-radius: 0;
+    box-sizing: border-box;
+    font-size: 14px;
+    line-height: normal;
+    margin: 10;
+    overflow: hidden;
+	border: 1px solid black;
+    resize: none;
+    width: 87%;
+	height: 90px;
+}
+
+#fb-image-lg{
+    z-index: 0;
+    width: 100%;
+	height: 280px;
+}
+
+#basic_profile {
+	position:relative;
+	box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+#about {
+	color: #4b4f56;
+    vertical-align: middle;
+	font-size: 20px;
+    font-weight: bold;
+	cursor: pointer;
+	text-decoration: none;
+	margin-left: 10px;
+}
+
+#about_info{
+	margin-left: 10px;
+}
+#top_about {
+    background: #f6f7f9;
+    border-bottom: 1px solid #d3d6db;
+    border-radius: 2px 2px 0 0;
+    margin-bottom: 15px;
+    min-height: 45px;
+    padding-top: 16px;
+
+}
+
+#top_posts {
+    background: #f6f7f9;
+    border-bottom: 1px solid #d3d6db;
+    border-radius: 2px 2px 0 0;
+    margin-bottom: 15px;
+    min-height: 45px;
+    padding-top: 16px;
+
+}
+.fb-image-profile
+{
+    margin: -110px 10px 0px 50px;
+    z-index: 9;
+    width: 20%; 
+	box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+
+
+@media (max-width:768px)
+{
+    
+.fb-profile-text>h1{
+    font-weight: 700;
+    font-size:16px;
+}
+
+.fb-image-profile
+{
+    margin: -45px 10px 0px 25px;
+    z-index: 9;
+    width: 20%; 
+}
+
+}

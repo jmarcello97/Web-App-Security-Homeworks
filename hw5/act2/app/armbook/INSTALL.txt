@@ -1,0 +1,5 @@
+The majority of this project can be installed easily. Simply drop it into your htdocs directory under a directory called 'armbook'.
+
+To setup the database import 'armbook.sql' into a database called 'armbook'.
+
+You will have to change the password located in common.php to reflect your database settings. For ease of use passwords are in plaintext within the users table.
