@@ -1,0 +1,25 @@
+version: "2"
+services:
+  webserver:
+   build: ./app
+   ports:
+      - "443:443"
+   links:
+      - db
+   depends_on:
+      - db
+ # report_to:
+ #   build: ./report_to
+ #   ports:
+ #     - "80:80"
+  db:
+    build: ./db
+    ports:
+      - "32000:3306"
+    #volumes:
+    #  - /var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_USER: dbuser
+      MYSQL_PASSWORD: userpass
+      MYSQL_DATABASE: armbook

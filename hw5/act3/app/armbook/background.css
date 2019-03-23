@@ -1,0 +1,50 @@
+body {
+	background-image:url('images/back.png');
+	background-repeat:no-repeat;
+} 
+#logo{
+	position: absolute;
+	top: 20px;
+	left: 30px;
+	width:240px; 
+}
+#login{
+	position: absolute;
+	top: 10px;
+	left: 550px;
+
+}
+#banter{
+	position: absolute;
+	top: 140px;
+	left: 20px;
+}
+#signSlogan{
+	position: absolute;
+	top: 140px;
+	left: 650px;
+}
+#regInfo{
+	position: absolute;
+	top: 200px;
+	left: 650px;
+}
+#whiteback{
+	position: absolute;
+	top: 81px;
+	left: 0px;
+}
+#logintable{
+	border-style: solid; 
+	position: absolute;
+	top: 200px;
+	left: 200px;
+	margin: 0px; padding: 10px 10px 10px;
+	width:600px;
+	height:200px;
+}
+#logininfo{
+	position: absolute;
+	top: 250px;
+	left: 350px;
+}
